@@ -1,9 +1,15 @@
-import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn } from 'typeorm';
-import Endereco from './endereco.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
+import Endereco from './address.entity';
 
-@Entity('TCLIENTE')
-export default class Cliente {
-  @PrimaryColumn()
+@Entity('PVDA.TCLIENTE')
+export default class Client {
+  @PrimaryGeneratedColumn()
   CLI_ID: number;
 
   @Column('varchar2', { length: 20 })

@@ -1,8 +1,8 @@
 import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import Cliente from './cliente.entity';
+import Client from './client.entity';
 
-@Entity('TCLIENTE_E')
-export default class Endereco {
+@Entity('PVDA.TCLIENTE_E')
+export default class Address {
   @PrimaryColumn()
   CLIE_ID: number;
 
@@ -27,7 +27,7 @@ export default class Endereco {
   @Column('varchar2', { length: 2 })
   CLIE_UF: string;
 
-  @ManyToOne(() => Cliente, (cli) => cli.CLIENTE_E, { cascade: true })
+  @ManyToOne(() => Client, (cli) => cli.CLIENTE_E, { cascade: true })
   @JoinColumn({ name: 'CLIE_CLI_ID', referencedColumnName: 'CLI_ID' })
-  OWNER: Cliente; // Nome do Relacionamento com a Cliente nesta tabelas
+  OWNER: Client; // Nome do Relacionamento com a Cliente nesta tabelas
 }

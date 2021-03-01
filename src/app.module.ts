@@ -1,11 +1,6 @@
 import { Module } from '@nestjs/common';
-
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { AppController } from './app.controller';
-
-import { AppService } from './app.service';
-
+import { crudModule } from './Modulos/Crud/crud.module';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -24,9 +19,7 @@ require('dotenv').config();
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       connectString: process.env.CONNECTION_STRING,
     }),
-    // crudModule,
+    crudModule,
   ],
-
-  providers: [AppService],
 })
 export class AppModule {}
