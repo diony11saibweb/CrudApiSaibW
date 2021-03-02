@@ -1,19 +1,11 @@
 export class ResultDto {
-
   constructor(
+    public message: string,
 
-      public message: string,
+    public success: boolean,
 
-      public success: boolean,
+    public retorno: any,
 
-      public retorno: any,
-
-      public errors: any,
-
-  ) {
-
- 
-
-  }
-
+    public errors: any,
+  ) {}
 }

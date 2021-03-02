@@ -20,3 +20,16 @@ export function normalizeCpfCnpj(v) {
   }
   return v;
 }
+
+export function normalizePhone(v) {
+  if (v != '' || v != null) {
+    v = v.replace(/\D/g, '');
+    return v;
+  }
+  return v;
+}
+
+export function normalizeDate(data) {
+  const x = new Date(data);
+  return x;
+}
