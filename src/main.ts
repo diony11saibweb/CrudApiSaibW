@@ -22,8 +22,8 @@ async function bootstrap() {
 
   // Open API
   const options = new DocumentBuilder()
-    .setTitle('API DE TESTE')
-    .setDescription('SAIBWEB TESTE NEST')
+    .setTitle('API DE TESTE - v1')
+    .setDescription('SAIBWEB - API NEST')
     .setVersion('1.0.0')
     .addTag('SAIBWEB')
     .build();
@@ -39,12 +39,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-
-// import { NestFactory } from '@nestjs/core';
-// import { AppModule } from './app.module';
-
-// async function bootstrap() {
-//   const app = await NestFactory.create(AppModule);
-//   await app.listen(3000);
-// }
-// bootstrap();

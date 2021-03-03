@@ -17,64 +17,60 @@ export class ClientService {
   ) {}
 
   async store(@Body() body: Client): Promise<any> {
-    const { CLI_NOME, CLI_CNPJ_CPF, CLI_DATANASC, CLI_FONE } = body;
-    const next = await this.clientRepository.query(
-      `SELECT MAX(CLI_ID) + 1 as id FROM PVDA.TCLIENTE`,
-    );
+    // [x] Passar Query para a entidade Client usandos as triggers (BeforeInsert)
+    // [x] Rota de cadastro deve fazer UPDATE
+    // [x] Passar CLI_DATACAD para entidade
+    // [ ] Retirar ".create()" do service
+    // [ ] Adicionar Endereços juntos ao cadastro
+    // [ ] Criar transaction para inserção
+    // [ ] Retorno deve passar pelo DTOS
 
-    const hasCpf = await this.clientRepository.findOne({
-      where: { CLI_CNPJ_CPF: normalizeCpfCnpj(CLI_CNPJ_CPF) },
+    const { CLI_ID = 0, CLI_NOME, CLI_CNPJ_CPF, CLI_DATANASC, CLI_FONE } = body;
+
+    const hasCpf = await this.clientRepository.find({
+      CLI_CNPJ_CPF: normalizeCpfCnpj(CLI_CNPJ_CPF),
     });
 
-    if (hasCpf[0]) {
-      //Passar para JSON - DTOS
-      return 'Este CPF/CNPJ já foi cadastrado.';
+    const hasId = await this.clientRepository.findOne(CLI_ID);
+
+    if (CLI_ID === 0 && hasCpf[0]) {
+      return { message: 'Este CPF/CNPJ já foi cadastrado.' };
     }
 
-    // Passar Query para a entidade Client usandos as triggers (BeforeInsert)
-    // Rota de cadastro deve fazer UPDATE
-    // Passar CLI_DATACAD para entidade
-    // Retirar ".create()" do service
-    // Adicionar Endereços juntos ao cadastro
-    // Criar transaction para inserção
-    // Retorno deve passar pelo DTOS
-
-    next[0].ID === null ? (next[0].ID = 1) : null;
+    if (!hasId && CLI_ID != 0) {
+      return { message: 'Cliente não encontrado.' };
+    }
 
     const client = {
-      CLI_ID: next[0].ID,
+      CLI_ID,
       CLI_NOME: normalizeName(CLI_NOME),
-      CLI_DATACAD: normalizeDate(new Date().toLocaleDateString()),
       CLI_FONE: normalizePhone(CLI_FONE),
       CLI_CNPJ_CPF: normalizeCpfCnpj(CLI_CNPJ_CPF),
       CLI_DATANASC: normalizeDate(CLI_DATANASC),
     };
 
-    const newClient = this.clientRepository.create(client);
-    return await this.clientRepository.save(newClient);
+    const clientCreated = this.clientRepository.create(client);
+
+    return await this.clientRepository.save(clientCreated);
   }
 
   async index(): Promise<Client[]> {
     return await this.clientRepository.find();
   }
 
-  async findOne(id: string): Promise<Client> {
-    const hasClient = await this.clientRepository.find({
-      where: { CLI_ID: id },
-    });
-    return hasClient[0] ? hasClient[0] : null;
+  async findOne(id: string): Promise<any> {
+    const CLI_ID = id;
+    const hasClient = await this.clientRepository.findOne(CLI_ID);
+    return hasClient ? hasClient : { message: 'Nenhum cliente encontrado.' };
   }
 
   async update(id: string, body: any): Promise<any> {
     const { CLI_NOME, CLI_CNPJ_CPF, CLI_DATANASC, CLI_FONE } = body;
 
-    const hasCpf = await this.clientRepository.find({
-      where: { CLI_CNPJ_CPF },
-    });
+    const hasCpf = await this.clientRepository.findOne(CLI_CNPJ_CPF);
 
-    if (hasCpf[0]) {
-      //Passar para JSON - DTOS
-      return 'Este CPF/CNPJ já foi cadastrado.';
+    if (hasCpf) {
+      return { message: 'Este CPF/CNPJ já foi cadastrado.' };
     }
 
     const x = await getConnection()
@@ -93,13 +89,19 @@ export class ClientService {
   }
 
   async delete(id: string): Promise<any> {
-    const x = await getConnection()
-      .createQueryBuilder()
-      .delete()
-      .from(Client)
-      .where({ CLI_ID: id })
-      .execute();
+    try {
+      const x = await getConnection()
+        .createQueryBuilder()
+        .delete()
+        .from(Client)
+        .where({ CLI_ID: id })
+        .execute();
 
-    return x;
+      return x.affected > 0
+        ? { message: 'O cliente foi excluido com sucesso.' }
+        : { message: 'Nenhum cliente foi excluido, verifique o id' };
+    } catch (e) {
+      return { message: 'Não foi possivel excluir o cliente, verifique o id.' };
+    }
   }
 }
