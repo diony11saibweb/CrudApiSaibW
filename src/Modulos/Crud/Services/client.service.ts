@@ -25,7 +25,14 @@ export class ClientService {
     // [ ] Criar transaction para inserção
     // [ ] Retorno deve passar pelo DTOS
 
-    const { CLI_ID = 0, CLI_NOME, CLI_CNPJ_CPF, CLI_DATANASC, CLI_FONE } = body;
+    const {
+      CLI_ID = 0,
+      CLI_NOME,
+      CLI_CNPJ_CPF,
+      CLI_DATANASC,
+      CLI_FONE,
+      CLIENTE_E,
+    } = body;
 
     const hasCpf = await this.clientRepository.find({
       CLI_CNPJ_CPF: normalizeCpfCnpj(CLI_CNPJ_CPF),
@@ -47,6 +54,7 @@ export class ClientService {
       CLI_FONE: normalizePhone(CLI_FONE),
       CLI_CNPJ_CPF: normalizeCpfCnpj(CLI_CNPJ_CPF),
       CLI_DATANASC: normalizeDate(CLI_DATANASC),
+      CLIENTE_E,
     };
 
     const clientCreated = this.clientRepository.create(client);
@@ -55,12 +63,16 @@ export class ClientService {
   }
 
   async index(): Promise<Client[]> {
-    return await this.clientRepository.find();
+    return await this.clientRepository.find({
+      relations: ['CLIENTE_E'],
+    });
   }
 
   async findOne(id: string): Promise<any> {
     const CLI_ID = id;
-    const hasClient = await this.clientRepository.findOne(CLI_ID);
+    const hasClient = await this.clientRepository.findOne(CLI_ID, {
+      relations: ['CLIENTE_E'],
+    });
     return hasClient ? hasClient : { message: 'Nenhum cliente encontrado.' };
   }
 

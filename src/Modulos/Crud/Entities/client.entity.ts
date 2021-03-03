@@ -5,7 +5,6 @@ import {
   OneToMany,
   JoinColumn,
   BeforeInsert,
-  BeforeUpdate,
   getManager,
 } from 'typeorm';
 import Endereco from './address.entity';
