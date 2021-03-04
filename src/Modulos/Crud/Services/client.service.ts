@@ -20,10 +20,15 @@ export class ClientService {
     // [x] Passar Query para a entidade Client usandos as triggers (BeforeInsert)
     // [x] Rota de cadastro deve fazer UPDATE
     // [x] Passar CLI_DATACAD para entidade
-    // [ ] Retirar ".create()" do service
+    // [-] Retirar ".create()" do service
     // [ ] Adicionar Endereços juntos ao cadastro
-    // [ ] Criar transaction para inserção
+    // [x] Criar transaction para inserção
     // [ ] Retorno deve passar pelo DTOS
+    // [ ] Seguir padrão RESTFULL
+    // [X] Consultar params ( Por Name, Cpf, Cnpj, DataNasc )
+
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
 
     const {
       CLI_ID = 0,
@@ -57,9 +62,16 @@ export class ClientService {
       CLIENTE_E,
     };
 
-    const clientCreated = this.clientRepository.create(client);
+    await queryRunner.startTransaction();
 
-    return await this.clientRepository.save(clientCreated);
+    try {
+      const clientCreated = this.clientRepository.create(client);
+      return await this.clientRepository.save(clientCreated);
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async index(): Promise<Client[]> {

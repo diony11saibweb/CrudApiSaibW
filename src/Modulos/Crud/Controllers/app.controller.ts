@@ -1,12 +1,22 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query, Param } from '@nestjs/common';
 import { AppService } from './../Services/app.service';
 
-@Controller()
+@Controller('/')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('/query*')
+  getForParams(@Query('search') search): string | Promise<any> {
+    return this.appService.getForParams(search);
+  }
+
+  @Get('/report')
+  getAll(): string | Promise<any> {
+    return this.appService.index();
+  }
+
+  @Get('/report/:id')
+  getOne(@Param('id') id: string): string | Promise<any> {
+    return this.appService.findOne(id);
   }
 }

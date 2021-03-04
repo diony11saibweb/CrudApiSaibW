@@ -1,6 +1,5 @@
 export function normalizeName(name) {
-  if (name != '' || name != null || undefined) {
-    console.log(name);
+  if (name != '' && name != null && name != undefined) {
     const text = name
       .toLowerCase()
       .split(' ')
@@ -14,7 +13,7 @@ export function normalizeName(name) {
 }
 
 export function normalizeCpfCnpj(v) {
-  if (v != '' || v != null) {
+  if (v != '' && v != null) {
     v = v.replace(/\D/g, '');
     return v;
   }
@@ -22,7 +21,7 @@ export function normalizeCpfCnpj(v) {
 }
 
 export function normalizePhone(v) {
-  if (v != '' || v != null) {
+  if (v != '' && v != null) {
     v = v.replace(/\D/g, '');
     return v;
   }
@@ -32,4 +31,25 @@ export function normalizePhone(v) {
 export function normalizeDate(data) {
   const x = new Date(data);
   return x;
+}
+
+export function normalizeCep(v) {
+  if (v != '' && v != null && v == isNaN) {
+    const x = v.replace(/\D/g, '');
+    return x;
+  }
+  return v;
+}
+
+export function normalizeUf(v) {
+  console.log(v);
+  if (v != '' && v != null) {
+    v = v.replace('[^a-zA-Z]+', '');
+    return v.toUpperCase();
+  }
+  return v;
+}
+
+export function normalizeQueryDate() {
+  return;
 }
