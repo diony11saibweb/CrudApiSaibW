@@ -17,16 +17,6 @@ export class ClientService {
   ) {}
 
   async store(@Body() body: Client): Promise<any> {
-    // [x] Passar Query para a entidade Client usandos as triggers (BeforeInsert)
-    // [x] Rota de cadastro deve fazer UPDATE
-    // [x] Passar CLI_DATACAD para entidade
-    // [-] Retirar ".create()" do service
-    // [ ] Adicionar Endereços juntos ao cadastro
-    // [x] Criar transaction para inserção
-    // [ ] Retorno deve passar pelo DTOS
-    // [ ] Seguir padrão RESTFULL
-    // [X] Consultar params ( Por Name, Cpf, Cnpj, DataNasc )
-
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
 

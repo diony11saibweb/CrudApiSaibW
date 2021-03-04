@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Body,
-  Delete,
-  Param,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import Address from '../Entities/address.entity';
 import { AddressService } from './../Services/address.service';
 

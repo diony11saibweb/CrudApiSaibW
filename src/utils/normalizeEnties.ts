@@ -42,7 +42,6 @@ export function normalizeCep(v) {
 }
 
 export function normalizeUf(v) {
-  console.log(v);
   if (v != '' && v != null) {
     v = v.replace('[^a-zA-Z]+', '');
     return v.toUpperCase();

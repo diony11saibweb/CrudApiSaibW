@@ -37,20 +37,19 @@ export class AppService {
     const clients = await this.clientRepository.find({
       relations: ['CLIENTE_E'],
     });
-
+    const nameUuid = uuid();
     try {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-      // await page.setContent('<h1>TEste</h1>');
-      await page.setContent(reportTemplete(clients));
+      await page.setContent(reportTemplete({ clients: clients }, 'allClients'));
       await page.emulateMediaType('print');
-      await page.pdf({ path: `documents/${uuid()}.pdf`, format: 'a4' });
+      await page.pdf({ path: `documents/${nameUuid}.pdf`, format: 'a4' });
       await browser.close();
+      return { url: `http://localhost:2001/documents/${nameUuid}.pdf` };
     } catch (e) {
-      return e;
+      console.log(e);
+      return { error: `Não foi possível gerar o relatório.` };
     }
-
-    return;
   }
 
   async findOne(id: string): Promise<any> {

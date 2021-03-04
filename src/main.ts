@@ -22,7 +22,7 @@ async function bootstrap() {
 
   // Open API
   const options = new DocumentBuilder()
-    .setTitle('API DE TESTE - v1')
+    .setTitle('API DE TESTE - v1.0')
     .setDescription('SAIBWEB - API NEST')
     .setVersion('1.0.0')
     .addTag('SAIBWEB')

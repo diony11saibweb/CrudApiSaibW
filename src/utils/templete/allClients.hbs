@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8">
   <title>A simple, clean, and responsive HTML invoice template</title>
-
   <style>
     .center {
       text-align: center;
@@ -24,6 +23,13 @@
       width: 100%;
       line-height: inherit;
       text-align: left;
+
+    }
+
+    .border-table {
+      border: 1px solid #ddd;
+      padding: 0px;
+      margin-bottom: 20px;
     }
 
     .invoice-box table td {
@@ -50,9 +56,12 @@
     }
 
     .invoice-box table tr.heading td {
-      /* background: #eee; */
-      border-bottom: 1px solid #ddd;
+      border-bottom: 0px solid #ddd;
       font-weight: bold;
+    }
+
+    .invoice-box table tr.heading-start td {
+      margin-top: 10px;
     }
 
     .invoice-box table tr.details td {
@@ -60,8 +69,20 @@
     }
 
     .invoice-box table tr.item td {
-      font-size: 14px;
-      border-bottom: 1px solid #eee;
+      padding-top: 5px;
+      font-size: 13px;
+      border-bottom: 0px solid #eee;
+    }
+
+    .invoice-box table tr.item-last td {
+      font-size: 13px;
+      border: none;
+      padding-bottom: 20px;
+    }
+
+    .invoice-box table tr.item-end td {
+      font-size: 12px;
+      border-bottom: 0px solid #eee;
     }
 
     .invoice-box table tr.item.last td {
@@ -70,6 +91,11 @@
 
     .invoice-box table tr.total td:nth-child(2) {
       border-top: 2px solid #eee;
+      font-weight: bold;
+    }
+
+    .item-name {
+      color: rgb(42, 42, 42);
       font-weight: bold;
     }
 
@@ -126,29 +152,52 @@
     </table>
     <h2 class="center">Relatório de Clientes</h2>
     <table>
-      <tr class="heading">
+      <tr class="heading heading-start">
         <td>Nome</td>
         <td>CPF/CNPJ</td>
         <td>Telefone</td>
         <td>Nasc.</td>
         <td>Criado em</td>
       </tr>
-      <tr class="item">
-        <td>Diony Borges Ribeiro</td>
-        <td>755.646.371-00</td>
-        <td>(62)992822760</td>
-        <td>01-MAI-1994</td>
-        <td>05-JAN-2020</td>
+      {{#each clients}}
+      <tr class="item item-name">
+        <td>{{normalizeNome CLI_NOME }}</td>
+        <td>{{normalizeCpf CLI_CNPJ_CPF }}</td>
+        <td>{{normalizeFone CLI_FONE }}</td>
+        <td>{{normalizeData CLI_DATANASC }}</td>
+        <td>{{normalizeData CLI_DATACAD }}</td>
       </tr>
       <tr class="item">
-        <td>Mariana Campos Sodré</td>
-        <td>755.646.371-00</td>
-        <td>(62)992822760</td>
-        <td>01-MAI-1994</td>
-        <td>05-JAN-2020</td>
+        <td colspan="5" class="item-last">
+          <table class="border-table">
+            {{#if CLIENTE_E }}
+            <tr class="heading heading-end">
+              <td>Cep</td>
+              <td>Tipo</td>
+              <td>Endereço</td>
+              <td>Bairro</td>
+              <td>Cidade</td>
+              <td>UF</td>
+            </tr>
+            {{#each CLIENTE_E}}
+            <tr class="item item-end">
+              <td>{{normalizeCep CLIE_CEP }}</td>
+              <td>{{CLIE_TIPO }}</td>
+              <td>{{normalizeNome CLIE_ENDERECO }}</td>
+              <td>{{normalizeNome CLIE_BAIRRO }}</td>
+              <td>{{normalizeNome CLIE_CIDADE }}</td>
+              <td>{{CLIE_UF }}</td>
+            </tr>
+            {{/each}}
+            {{/if}}
+          </table>
+        </td>
       </tr>
+      {{/each}}
     </table>
   </div>
+  <script>
+  </script>
 </body>
 
 </html>
